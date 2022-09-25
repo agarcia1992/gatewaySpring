@@ -1,0 +1,22 @@
+server:
+  port: 8880
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: backend-api
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/backend/**
+          filters:
+            - RewritePath=/backend/(?<service>.*), /$\{service}
+
+        - id: api-web
+          uri: http://localhost:4200/
+          predicates:
+          - Path=/web/**
+          filters:
+            - RewritePath=/web/(?<service>.*), /web/$\{service}
+
+
