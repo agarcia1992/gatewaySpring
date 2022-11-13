@@ -6,7 +6,7 @@ spring:
     gateway:
       routes:
         - id: backend-api
-          uri: http://localhost:8080/
+          uri: http://localhost:8090/
           predicates:
             - Path=/backend/**
           filters:
@@ -15,8 +15,33 @@ spring:
         - id: api-web
           uri: http://localhost:4200/
           predicates:
-          - Path=/web/**
+            - Path=/web/**
           filters:
             - RewritePath=/web/(?<service>.*), /web/$\{service}
+
+      default-filters: TokenRelay
+
+
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/auth/realms/SpringBootKeyclock
+        registration:
+          spring-cloud-gateway-client:
+            client-id: iniciar-session
+            client-secret: 3YvQFBofejAuwTWLS9oIX2XkRRobGmag
+            provider: keycloak
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/iniciar-session"
+          spring-cloud-gateway-client2:
+            client-id: app-web
+            client-secret: NoVcva2j4tMpuI7cVZrFo4VsfvCPp2M7
+            provider: keycloak
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/app-web"
+
+
 
 
